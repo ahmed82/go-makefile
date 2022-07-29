@@ -1,8 +1,35 @@
-hello:
-	echo "Hello"
+BUILDPATH=$(CURDIR)
+GO=$(shell which go)
+GOINSTALL=$(GO) install
+GOCLEAN=$(GO) clean
+GOGET=$(GO) get
+
+EXENAME=main
+
+export GOPATH=$(CURDIR)
+
+hi:
+	@echo "I am a makefile"
+
+makedir:
+	@echo "start building tree..."
+	@if [ ! -d $(BUILDPATH)/bin ] ; then mkdir -p $(BUILDPATH)/bin ; fi
+	@if [ ! -d $(BUILDPATH)/pkg ] ; then mkdir -p $(BUILDPATH)/pkg ; fi
+
+get:
+	@$(GOGET) github.com/gorilla/mux
+	@$(GOGET) github.com/go-sql-driver/mysql
+	
 
 build:
-	go build -o bin/main main.go
+	@echo "start building..."
+	$(GOINSTALL) $(EXENAME)
+	@echo "Yay! all DONE!"
 
-run:
-	go run main.go
+clean:
+	@echo "cleanning"
+	@rm -rf $(BUILDPATH)/bin/$(EXENAME)
+	@rm -rf $(BUILDPATH)/pkg
+	@rm -rf $(BUILDPATH)/src/github.com
+
+all: makedir get build
