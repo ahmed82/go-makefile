@@ -2,13 +2,7 @@ package main
 
 import (
 	"fmt"
-	"sync"
 	"time"
-)
-
-var (
-	mutex   sync.Mutex
-	balance int
 )
 
 func main() {
