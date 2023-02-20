@@ -7,3 +7,6 @@ gen:
 
 server1:
 	go run cmd/server/main.go -port 50051
+
+cert:
+	cd cert; ./gen.sh; cd ..
