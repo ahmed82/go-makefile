@@ -1,30 +1,37 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
+	"net"
+
+	"github.com/ahmed82/go-makefile/src/playground/protobuf/proto/invoicer"
+	"google.golang.org/grpc"
 )
 
-func fibonacci(max int, ch chan int) {
-	fib := make([]int, max)
-	fib[0] = 0
-	fib[1] = 1
-	ch <- fib[0]
-	ch <- fib[1]
-	for i := 2; i < max; i++ {
-		fib[i] = fib[i-1] + fib[i-2]
-		ch <- fib[i]
-	}
-	close(ch)
+type myInvoicerServer struct {
+	invoicer.UnimplementedInvoicerServer
 }
 
+func (s myInvoicerServer) Creat(ctx context.Context, req *invoicer.CreateRequest) (*invoicer.CreateResponse, error) {
+	return &invoicer.CreateResponse{
+		Pdf:  []byte(req.From),
+		Docx: []byte("test"),
+	}, nil
+}
 func main() {
-	ch := make(chan int)
-	go fibonacci(20, ch)
-
-	//fmt.Printf("%d\n", <-ch)
-
-	for msg := range ch {
-		fmt.Println(msg)
+	lis, err := net.Listen("tcp", ":8089")
+	if err != nil {
+		log.Fatalf("Cannot create Listener: %s", err)
 	}
 
+	serverRegisterer := grpc.NewServer()
+	service := &myInvoicerServer{}
+	//create a type the implement the interface InvoiceServer
+	invoicer.RegisterInvoicerServer(serverRegisterer, service)
+
+	err = serverRegisterer.Serve(lis)
+	if err != nil {
+		log.Fatalf("cannot Serve: %s", err)
+	}
 }

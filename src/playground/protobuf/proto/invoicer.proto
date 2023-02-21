@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "github.com/ahmed82/Go-MAKEFILE/src/playground/protobuf/proto/invoicer";
+
+message CreateRequest {
+    Amount amount = 1;
+    string from = 2;
+    string to = 3;
+}
+
+message CreateResponse {
+    bytes pdf = 1;
+    bytes docx = 2;
+}
+
+message Amount {
+    int64 amount = 1;
+    string currency = 2;
+}
+
+service Invoicer {
+    rpc Creat(CreateRequest) returns (CreateResponse);
+    rpc Update(CreateRequest) returns (CreateResponse);
+}
