@@ -11,9 +11,9 @@ option java_package = "org.hyperledger.fabric.protos.orderer.bdls";
 
 package bdls;
 
-// Metadata is serialized and set as the value of ConsensusType.Metadata in
+// ConfigMetadata  is serialized and set as the value of ConsensusType.Metadata in
 // a channel configuration when the ConsensusType.Type is set "BDLS".
-message Metadata {
+message ConfigMetadata  {
 	repeated Consenter consenters = 1;
 	Options options = 2;
 }
